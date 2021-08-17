@@ -1,4 +1,8 @@
-// adding margins
+
+//----------------------------------//
+//----------------------------------//
+//----------------------------------//
+//adding margins
 var svgWidth = 960;
 var svgHeight = 500;
 
@@ -21,13 +25,13 @@ var svg = d3.select("#scatter") //(".chart")
 
 // Append an SVG group
 var chartGroup = svg.append("g")
-.attr("transform", `translate(${margin.left}, ${margin.top})`);
+  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Initial Params
 var chosenXAxis = "poverty";
 
 // Load data.csv from data file - name as healthData
-d3.csv("assets/data/data.csv").then(function(healthData) {
+d3.csv("./assets/data/data.csv").then(function(healthData) {
 
     // Print the healthData
     console.log(healthData);
@@ -54,7 +58,7 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     console.log(healthData)
 
     // xLinearScale function above csv import
-     var xLinearScale = xScale(data, chosenXAxis);
+    var xLinearScale = xScale(data, chosenXAxis);
 
     // Create y scale function
     var yLinearScale = d3.scaleLinear()
