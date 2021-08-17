@@ -14,8 +14,7 @@ var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
-var svg = d3
-  .select(".chart")
+var svg = d3.select("#scatter") //(".chart")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -24,6 +23,8 @@ var svg = d3
 var chartGroup = svg.append("g")
 .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+// Initial Params
+var chosenXAxis = "poverty";
 
 // Load data.csv from data file - name as healthData
 d3.csv("assets/data/data.csv").then(function(healthData) {
@@ -51,5 +52,38 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
   });
 
     console.log(healthData)
+
+    // xLinearScale function above csv import
+     var xLinearScale = xScale(data, chosenXAxis);
+
+    // Create y scale function
+    var yLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.healthcare)])
+    .range([height, 0]);
+
+    // Create initial axis functions
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+    // append x axis
+    var xAxis = chartGroup.append("g")
+      .classed("x-axis", true)
+      .attr("transform", `translate(0, ${height})`)
+      .call(bottomAxis);
+
+    // append y axis
+    chartGroup.append("g")
+      .call(leftAxis);
+
+    // append initial circles
+    var circlesGroup = chartGroup.selectAll("circle")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("cx", d => xLinearScale(d[chosenXAxis]))
+      .attr("cy", d => yLinearScale(d.healthcare))
+      .attr("r", 10)
+      .attr("fill", "blue")
+      .attr("opacity", ".5");
 
 });
