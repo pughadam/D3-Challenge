@@ -78,8 +78,8 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   }
 
   var toolTip = d3.tip()
-    .attr("class", "tooltip")
-    .offset([80, -60])
+    .attr("class", "d3-tip")
+    .offset([40, -60])
     .html(function(d) {
       return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
     });
@@ -87,7 +87,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   circlesGroup.call(toolTip);
 
   circlesGroup.on("mouseover", function(data) {
-    toolTip.show(data);
+    toolTip.show(data, this);
   })
     // onmouseout event
     .on("mouseout", function(healthData, index) {
@@ -155,11 +155,21 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
       .attr("cy", d => yLinearScale(d.healthcare))
       .attr("r", 10)
       .attr("fill", "blue")
-      .attr("opacity", ".5");
+      .attr("opacity", ".5"); // add in semi-colon 
+      // .text(function(d){return d.abbr}); 
+      circlesGroup.append("text").text(function(d){
+        return d.abbr;
+      })
+      .attr("chosenXAxis", function (d) {
+          return xLinearScale(d.x);
+      })
+      .attr("d.healthcare", function (d) {
+          return yLinearScale(d.y);
+      });
 
 //-----------------------------------------------------//
 
-     // Create group for two x-axis labels
+// Create group for two x-axis labels
 var labelsGroup = chartGroup.append("g")
   .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
@@ -170,7 +180,7 @@ var povertyLabel = labelsGroup.append("text")
   .classed("active", true)
   .text("Poverty Percentage");
 
-var albumsLabel = labelsGroup.append("text")
+var incomeLabel = labelsGroup.append("text")
   .attr("x", 0)
   .attr("y", 40)
   .attr("value", "income") // value to grab for event listener
@@ -184,7 +194,7 @@ chartGroup.append("text")
   .attr("x", 0 - (height / 2))
   .attr("dy", "1em")
   .classed("axis-text", true)
-  .text("Healthcare");
+  .text("Percent without Healthcare");
 
 // updateToolTip function above csv import
 var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
