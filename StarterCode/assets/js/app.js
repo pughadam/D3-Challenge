@@ -145,26 +145,28 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     // append y axis
     chartGroup.append("g")
       .call(leftAxis);
-
-    // append initial circles
-    var circlesGroup = chartGroup.selectAll("circle")
+     
+    var circlesGroupBubble = chartGroup.selectAll("circle")
       .data(healthData)
       .enter()
+
+    // append initial circles
+    var circlesGroup = circlesGroupBubble
       .append("circle")
       .attr("cx", d => xLinearScale(d[chosenXAxis]))
       .attr("cy", d => yLinearScale(d.healthcare))
-      .attr("r", 10)
+      .attr("r", 15)
       .attr("fill", "blue")
       .attr("opacity", ".5"); // add in semi-colon 
       // .text(function(d){return d.abbr}); 
-      circlesGroup.append("text").text(function(d){
+      circlesGroupBubble.append("text").text(function(d){
         return d.abbr;
       })
-      .attr("chosenXAxis", function (d) {
-          return xLinearScale(d.x);
+      .attr("dx", function (d) {
+          return xLinearScale(d[chosenXAxis]);
       })
-      .attr("d.healthcare", function (d) {
-          return yLinearScale(d.y);
+      .attr("dy", function (d) {
+          return yLinearScale(d.healthcare);
       });
 
 //-----------------------------------------------------//
