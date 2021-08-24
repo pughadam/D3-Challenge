@@ -65,6 +65,16 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
   return circlesGroup;
 }
 
+
+function renderText(circlesGroupBubble, newXScale, chosenXAxis) {
+
+  circlesGroupBubble.transition()
+    .duration(1000)
+    .attr("dx", d => newXScale(d[chosenXAxis]));
+
+  return circlesGroupBubble;
+}
+
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, circlesGroup) {
 
@@ -146,12 +156,12 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     chartGroup.append("g")
       .call(leftAxis);
      
-    var circlesGroupBubble = chartGroup.selectAll("circle")
+    var circlesGroupEnter = chartGroup.selectAll("circle")
       .data(healthData)
       .enter()
 
     // append initial circles
-    var circlesGroup = circlesGroupBubble
+    var circlesGroup = circlesGroupEnter
       .append("circle")
       .attr("cx", d => xLinearScale(d[chosenXAxis]))
       .attr("cy", d => yLinearScale(d.healthcare))
@@ -159,15 +169,13 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
       .attr("fill", "blue")
       .attr("opacity", ".5"); // add in semi-colon 
       // .text(function(d){return d.abbr}); 
-      circlesGroupBubble.append("text").text(function(d){
-        return d.abbr;
-      })
-      .attr("dx", function (d) {
-          return xLinearScale(d[chosenXAxis]);
-      })
-      .attr("dy", function (d) {
-          return yLinearScale(d.healthcare);
-      });
+
+    // create abbr
+    var circlesGroupBubble = circlesGroupEnter
+      .append("text")
+      .text(function(d){return d.abbr;})
+      .attr("dx", function (d) {return xLinearScale(d[chosenXAxis]);})
+      .attr("dy", function (d) {return yLinearScale(d.healthcare);});
 
 //-----------------------------------------------------//
 
@@ -223,8 +231,20 @@ labelsGroup.selectAll("text")
       // updates circles with new x values
       circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
 
+      // circlesGroupBubble.append("text").text(function(d){
+      //     return d.abbr;
+      // })
+      // .attr("dx", function (d) {
+      //      return xLinearScale(d[chosenXAxis])-displacementX;
+      // })
+      // .attr("dy", function (d) {
+      //      return yLinearScale(d.healthcare)-displacementY;
+      // });
+
       // updates tooltips with new info
       circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+
+      circlesGroupBubble = renderText(circlesGroupBubble, xLinearScale, chosenXAxis);
 
       // changes classes to change bold text
       if (chosenXAxis === "income") {
