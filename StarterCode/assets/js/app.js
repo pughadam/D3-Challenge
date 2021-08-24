@@ -54,8 +54,7 @@ function renderAxes(newXScale, xAxis) {
   return xAxis;
 }
 
-// function used for updating circles group with a transition to
-// new circles
+// function used for updating circles group with a transition to new circles
 function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 
   circlesGroup.transition()
@@ -65,7 +64,7 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
   return circlesGroup;
 }
 
-
+// function used for updating text group with a transaction to new circles
 function renderText(circlesGroupBubble, newXScale, chosenXAxis) {
 
   circlesGroupBubble.transition()
@@ -244,6 +243,7 @@ labelsGroup.selectAll("text")
       // updates tooltips with new info
       circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
+      // update text when x-axis is changed
       circlesGroupBubble = renderText(circlesGroupBubble, xLinearScale, chosenXAxis);
 
       // changes classes to change bold text
